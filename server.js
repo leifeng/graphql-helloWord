@@ -1,18 +1,21 @@
 var koa = require('koa');
 var Router = require('koa-router');
-var bodyParser = require('koa-bodyparser');
-var conver =require('koa-convert');
-var graphqlHTTP=require('koa-graphql')
+var conver = require('koa-convert');
+var graphqlHTTP = require('koa-graphql')
+var body = require('koa-better-body')
 
 import { graphql } from 'graphql';
-import schema from './schema';
+import schema from './data/schema';
 
 var app = new koa();
 var router = new Router();
-
-router.all('/api',conver(graphqlHTTP({
+app.use(body())
+router.post('/create', (ctx, next) => {
+  console.log(ctx.request.body)
+})
+router.post('/api', conver(graphqlHTTP({
   schema,
-  graphiql:true
+  graphiql: true
 })))
 
 app.use(router.routes()).use(router.allowedMethods());
